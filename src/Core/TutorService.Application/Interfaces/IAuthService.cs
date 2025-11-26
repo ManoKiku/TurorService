@@ -1,6 +1,6 @@
 using TutorService.Application.DTOs.Auth;
 
-namespace TutorService.Application.Intefaces;
+namespace TutorService.Application.Interfaces;
 
 public interface IAuthService
 {

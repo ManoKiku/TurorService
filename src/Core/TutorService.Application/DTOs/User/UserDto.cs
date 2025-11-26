@@ -1,6 +1,6 @@
 using TutorService.Domain.Enums;
 
-namespace TutorService.Application.DTOs;
+namespace TutorService.Application.DTOs.User;
 
 public class UserDto
 {

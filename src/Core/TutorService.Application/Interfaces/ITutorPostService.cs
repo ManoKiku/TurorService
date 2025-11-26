@@ -1,7 +1,7 @@
 using TutorService.Application.DTOs.Tutor;
 using TutorService.Domain.Enums;
 
-namespace TutorService.Application.Intefaces;
+namespace TutorService.Application.Interfaces;
 
 public interface ITutorPostService
 {

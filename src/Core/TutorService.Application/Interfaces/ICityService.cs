@@ -1,6 +1,6 @@
 using TutorService.Application.DTOs.City;
 
-namespace TutorService.Application.Intefaces;
+namespace TutorService.Application.Interfaces;
 
 public interface ICityService
 {

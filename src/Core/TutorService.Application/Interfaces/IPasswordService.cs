@@ -1,4 +1,4 @@
-namespace TutorService.Application.Intefaces;
+namespace TutorService.Application.Interfaces;
 
 public interface IPasswordService
 {

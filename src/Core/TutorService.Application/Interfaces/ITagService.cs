@@ -1,7 +1,7 @@
 using TutorService.Application.DTOs.Tag;
 using TagDto = TutorService.Application.DTOs.Tag.TagDto;
 
-namespace TutorService.Application.Intefaces;
+namespace TutorService.Application.Interfaces;
 
 public interface ITagService
 {

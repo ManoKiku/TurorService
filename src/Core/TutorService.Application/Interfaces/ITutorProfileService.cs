@@ -1,7 +1,7 @@
 using TutorService.Application.DTOs.City;
 using TutorService.Application.DTOs.Tutor;
 
-namespace TutorService.Application.Intefaces;
+namespace TutorService.Application.Interfaces;
 
 public interface ITutorProfileService
 {
