@@ -7,21 +7,21 @@ public class RegisterRequest
 {
     [Required]
     [EmailAddress]
-    public string Email { get; set; }
+    public required string Email { get; set; }
 
     [Required]
     [MinLength(6)]
-    public string Password { get; set; }
+    public required string Password { get; set; }
 
     [Required]
-    public string FirstName { get; set; }
+    public required string FirstName { get; set; }
 
     [Required]
-    public string LastName { get; set; }
+    public required string LastName { get; set; }
 
     [Phone]
-    public string Phone { get; set; }
+    public required string Phone { get; set; }
 
     [Required]
-    public UserRole Role { get; set; }
+    public required UserRole Role { get; set; }
 }

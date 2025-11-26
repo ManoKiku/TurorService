@@ -14,7 +14,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         _context = context;
     }
 
-    public async Task<RefreshToken> GetByIdAsync(Guid id)
+    public async Task<RefreshToken?> GetByIdAsync(Guid id)
     {
         return await _context.RefreshTokens
             .Include(rt => rt.User)
@@ -68,14 +68,14 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         return await _context.SaveChangesAsync();
     }
 
-    public async Task<RefreshToken> GetByTokenAsync(string token)
+    public async Task<RefreshToken?> GetByTokenAsync(string token)
     {
         return await _context.RefreshTokens
             .Include(rt => rt.User)
             .FirstOrDefaultAsync(rt => rt.Token == token && !rt.IsDeleted);
     }
 
-    public async Task<RefreshToken> GetByJwtIdAsync(string jwtId)
+    public async Task<RefreshToken?> GetByJwtIdAsync(string jwtId)
     {
         return await _context.RefreshTokens
             .Include(rt => rt.User)

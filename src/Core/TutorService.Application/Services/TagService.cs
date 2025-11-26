@@ -46,7 +46,7 @@ public class TagService : ITagService
         return _mapper.Map<TagDto>(createdTag);
     }
 
-    public async Task<TagDto> UpdateTagAsync(int id, TagUpdateDto updateDto)
+    public async Task<TagDto?> UpdateTagAsync(int id, TagUpdateDto updateDto)
     {
         var existingTag = await _tagRepository.GetByIdAsync(id);
         if (existingTag == null)

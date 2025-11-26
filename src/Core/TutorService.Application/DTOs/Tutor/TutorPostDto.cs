@@ -4,14 +4,14 @@ namespace TutorService.Application.DTOs.Tutor;
 
 public class TutorPostDto
 {
-    public Guid Id { get; set; }
-    public int SubjectId { get; set; }
-    public string SubjectName { get; set; }
-    public Guid TutorId { get; set; }
-    public string TutorName { get; set; }
-    public string Description { get; set; }
-    public decimal HourlyRate { get; set; }
-    public PostStatus Status { get; set; }
-    public string? AdminComment { get; set; }
-    public IEnumerable<TagDto> Tags { get; set; }
+    public required Guid Id { get; set; }
+    public required int SubjectId { get; set; }
+    public required string SubjectName { get; set; }
+    public required Guid TutorId { get; set; }
+    public required string TutorName { get; set; }
+    public required string Description { get; set; }
+    public required decimal HourlyRate { get; set; }
+    public required PostStatus Status { get; set; }
+    public required string? AdminComment { get; set; }
+    public IEnumerable<TagDto>? Tags { get; set; }
 }

@@ -6,13 +6,13 @@ using TutorService.Domain.Enums;
 public interface ITutorPostRepository : IRepository<TutorPost>
 {
     Task<TutorPost> CreateAsync(TutorPost post);
-    Task<TutorPost> GetByIdWithDetailsAsync(Guid id);
+    Task<TutorPost?> GetByIdWithDetailsAsync(Guid id);
     Task<TutorPost> UpdateAsync(TutorPost post);
     Task DeleteAsync(TutorPost post);
 
     Task AddTagsAsync(Guid postId, IEnumerable<int> tagIds);
     Task RemoveTagAsync(Guid postId, int tagId);
-    Task<IEnumerable<Tag>> GetTagsAsync(Guid postId);
+    Task<IEnumerable<Tag?>> GetTagsAsync(Guid postId);
 
     Task<(IEnumerable<TutorPost> Results, int TotalCount)> SearchAsync(
         int? subjectId,

@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using TutorService.Application;
 using TutorService.Application.Configuration;
-using TutorService.Infrastructure;
 using TutorService.Infrastructure.Data;
 using TutorService.Web.Configuration;
 using TutorService.Web.Middleware;
@@ -48,6 +46,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+if(jwtSettings == null)
+{
+    throw new ArgumentException("Please specify JWT token config");
+}
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -73,7 +77,7 @@ builder.Services.AddAuthentication(options =>
         {
             if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
             {
-                context.Response.Headers.Add("Token-Expired", "true");
+                context.Response.Headers.TryAdd("Token-Expired", "true");
             }
             return Task.CompletedTask;
         }

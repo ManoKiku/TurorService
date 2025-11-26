@@ -11,7 +11,7 @@ public class TutorProfileRepository : BaseRepository<TutorProfile>, ITutorProfil
     {
     }
 
-    public async Task<TutorProfile> GetByUserIdAsync(Guid userId)
+    public async Task<TutorProfile?> GetByUserIdAsync(Guid userId)
     {
         return await _dbSet
             .Include(tp => tp.TutorCities)
@@ -23,7 +23,7 @@ public class TutorProfileRepository : BaseRepository<TutorProfile>, ITutorProfil
             .FirstOrDefaultAsync(tp => tp.UserId == userId && !tp.IsDeleted);
     }
 
-    public async Task<TutorProfile> GetWithDetailsAsync(Guid id)
+    public async Task<TutorProfile?> GetWithDetailsAsync(Guid id)
     {
         return await _dbSet
             .Where(tp => tp.Id == id && !tp.IsDeleted)
@@ -115,12 +115,12 @@ public class TutorProfileRepository : BaseRepository<TutorProfile>, ITutorProfil
 
         if (categoryId.HasValue)
         {
-            query = query.Where(tp => tp.TutorPosts.Any(p => p.Subject.Subcategory.CategoryId == categoryId.Value));
+            query = query.Where(tp => tp.TutorPosts.Any(p => p.Subject!.Subcategory!.CategoryId == categoryId.Value));
         }
 
         if (subcategoryId.HasValue)
         {
-            query = query.Where(tp => tp.TutorPosts.Any(p => p.Subject.SubcategoryId == subcategoryId.Value));
+            query = query.Where(tp => tp.TutorPosts.Any(p => p.Subject!.SubcategoryId == subcategoryId.Value));
         }
 
         if (subjectId.HasValue)

@@ -2,5 +2,5 @@ namespace TutorService.Application.DTOs.Tag;
 
 public class TagCreateDto
 {
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 }

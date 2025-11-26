@@ -2,6 +2,6 @@ namespace TutorService.Application.DTOs.Subject;
 
 public class SubjectCreateRequest
 {
-    public string Name { get; set; }
-    public int SubcategoryId { get; set; }
+    public required string Name { get; set; }
+    public required int SubcategoryId { get; set; }
 }

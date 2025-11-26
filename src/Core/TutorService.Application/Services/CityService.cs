@@ -47,7 +47,7 @@ public class CityService : ICityService
         return _mapper.Map<CityDto>(createdCity);
     }
 
-    public async Task<CityDto> UpdateCityAsync(int id, CityUpdateDto updateDto)
+    public async Task<CityDto?> UpdateCityAsync(int id, CityUpdateDto updateDto)
     {
         var existingCity = await _cityRepository.GetByIdAsync(id);
         if (existingCity == null)

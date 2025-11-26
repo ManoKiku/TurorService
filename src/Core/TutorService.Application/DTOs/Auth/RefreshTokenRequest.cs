@@ -5,8 +5,8 @@ namespace TutorService.Application.DTOs.Auth;
 public class RefreshTokenRequest
 {
     [Required]
-    public string Token { get; set; }
+    public required string Token { get; set; }
 
     [Required]
-    public string RefreshToken { get; set; }
+    public required string RefreshToken { get; set; }
 }

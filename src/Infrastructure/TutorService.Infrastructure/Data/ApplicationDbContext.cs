@@ -42,13 +42,13 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<StudentTutorRelation>(entity =>
         {
             entity.HasOne(str => str.Tutor)
-                .WithMany()
+                .WithMany(t => t.StudentTutorRelations)
                 .HasForeignKey(str => str.TutorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             
             entity.HasOne(str => str.Student)
-                .WithMany()
+                .WithMany(s => s.TutorRelations)
                 .HasForeignKey(str => str.StudentId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
@@ -56,12 +56,12 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<TutorCity>(entity =>
         {
             entity.HasOne(tc => tc.City)
-                .WithMany()
+                .WithMany(c => c.TutorCities)
                 .HasForeignKey(tc => tc.CityId)
                 .OnDelete(DeleteBehavior.Restrict);
             
             entity.HasOne(tc => tc.Tutor)
-                .WithMany()
+                .WithMany(t => t.TutorCities)
                 .HasForeignKey(tc => tc.TutorId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
@@ -69,12 +69,12 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<TutorPostTag>(entity =>
         {
             entity.HasOne(tpt => tpt.TutorPost)
-                .WithMany()
+                .WithMany(tp => tp.TutorPostTags)
                 .HasForeignKey(tpt => tpt.TutorPostId)
                 .OnDelete(DeleteBehavior.Restrict);
             
             entity.HasOne(tpt => tpt.Tag)
-                .WithMany()
+                .WithMany(t => t.TutorPostTags)
                 .HasForeignKey(tpt => tpt.TagId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
@@ -82,12 +82,12 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Chat>(entity =>
         {
             entity.HasOne(c => c.Student)
-                .WithMany()
+                .WithMany(s => s.ChatsAsStudent)
                 .HasForeignKey(c => c.StudentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             entity.HasOne(c => c.Tutor)
-                .WithMany()
+                .WithMany(t => t.Chats)
                 .HasForeignKey(c => c.TutorId)
                 .OnDelete(DeleteBehavior.NoAction); 
         });
@@ -95,12 +95,12 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Message>(entity =>
         {
             entity.HasOne(m => m.Chat)
-                .WithMany()
+                .WithMany(c => c.Messages)
                 .HasForeignKey(m => m.ChatId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(m => m.Sender)
-                .WithMany()
+                .WithMany(s => s.Messages)
                 .HasForeignKey(m => m.SenderId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
@@ -114,6 +114,11 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Chat>().HasQueryFilter(c => !c.IsDeleted);
         modelBuilder.Entity<Message>().HasQueryFilter(m => !m.IsDeleted);
         modelBuilder.Entity<RefreshToken>().HasQueryFilter(rt => !rt.IsDeleted);
+
+        modelBuilder.Entity<StudentTutorRelation>().HasQueryFilter(str => !str.Student!.IsDeleted);
+        modelBuilder.Entity<StudentTutorRelation>().HasQueryFilter(str => !str.Tutor!.IsDeleted);
+        modelBuilder.Entity<TutorCity>().HasQueryFilter(tc => !tc.Tutor!.IsDeleted);
+        modelBuilder.Entity<TutorPostTag>().HasQueryFilter(tpt => !tpt.TutorPost!.IsDeleted);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

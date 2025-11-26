@@ -19,11 +19,11 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
         return post;
     }
 
-    public async Task<TutorPost> GetByIdWithDetailsAsync(Guid id)
+    public async Task<TutorPost?> GetByIdWithDetailsAsync(Guid id)
     {
         return await _dbSet
             .Include(p => p.Tutor)
-                .ThenInclude(t => t.TutorCities)
+                .ThenInclude(t => t!.TutorCities)
             .Include(p => p.TutorPostTags)
                 .ThenInclude(tpt => tpt.Tag)
             .Include(p => p.Subject)
@@ -69,7 +69,7 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Tag>> GetTagsAsync(Guid postId)
+    public async Task<IEnumerable<Tag?>> GetTagsAsync(Guid postId)
     {
         return await _context.Set<TutorPostTag>()
             .Where(t => t.TutorPostId == postId)
@@ -92,7 +92,7 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
             .AsQueryable()
             .Where(p => !p.IsDeleted)
             .Include(p => p.Tutor)
-                .ThenInclude(t => t.TutorCities)
+                .ThenInclude(t => t!.TutorCities)
             .Include(p => p.TutorPostTags)
                 .ThenInclude(tpt => tpt.Tag)
             .Include(p => p.Subject)
@@ -105,7 +105,7 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
             query = query.Where(p => p.TutorId == tutorId.Value);
 
         if (cityId.HasValue)
-            query = query.Where(p => p.Tutor.TutorCities.Any(tc => tc.CityId == cityId.Value));
+            query = query.Where(p => p.Tutor!.TutorCities.Any(tc => tc.CityId == cityId.Value));
 
         if (tagIds != null && tagIds.Any())
             query = query.Where(p => p.TutorPostTags.Any(tpt => tagIds.Contains(tpt.TagId)));
@@ -118,7 +118,7 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
         if (!string.IsNullOrWhiteSpace(search))
         {
             var s = search.Trim().ToLower();
-            query = query.Where(p => p.Description.ToLower().Contains(s) || p.Tutor.Bio.ToLower().Contains(s));
+            query = query.Where(p => p.Description.ToLower().Contains(s) || p.Tutor!.Bio.ToLower().Contains(s));
         }
 
         var total = await query.CountAsync();

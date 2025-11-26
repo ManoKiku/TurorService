@@ -7,13 +7,8 @@ namespace TutorService.Infrastructure.Repositories;
 
 public class SubjectRepository : CrudRepository<Subject>, ISubjectRepository
 {
-    private readonly ApplicationDbContext _context;
-    private readonly DbSet<Subject> _dbSet;
-
     public SubjectRepository(ApplicationDbContext context) : base(context)
     {
-        _context = context;
-        _dbSet = context.Set<Subject>();
     }
 
     public async Task<(IEnumerable<Subject> Results, int TotalCount)> SearchAsync(string? search, int page, int pageSize)
