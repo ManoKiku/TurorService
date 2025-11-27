@@ -1,7 +1,5 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TutorService.Application.DTOs;
 using TutorService.Application.DTOs.Auth;
 using TutorService.Application.DTOs.User;
 using TutorService.Application.DTOs.Tutor;

@@ -84,7 +84,12 @@ public class AuthService : IAuthService
     public async Task<AuthResponse> RefreshTokenAsync(RefreshTokenRequest request)
     {
         var principal = _jwtService.GetPrincipalFromExpiredToken(request.Token);
-        var userId = Guid.Parse(principal.FindFirst("uid")?.Value);
+        var claim = principal.FindFirst("uid");
+        
+        if (claim == null)
+            throw new UnauthorizedAccessException("Invalid token");
+        
+        var userId = Guid.Parse(claim.Value);
 
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)

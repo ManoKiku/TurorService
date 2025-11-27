@@ -34,6 +34,9 @@ public class TutorProfileService : ITutorProfileService
     public async Task<TutorProfileDto> UpsertAsync(Guid userId, TutorProfileUpdateRequest request)
     {
         var user = await _userRepository.GetByIdAsync(userId);
+        
+        if (user == null) 
+            throw new UnauthorizedAccessException("User not found");
 
         if (user.Role != UserRole.Tutor)
         {
@@ -93,6 +96,6 @@ public class TutorProfileService : ITutorProfileService
     public async Task<IEnumerable<CityDto>> GetCitiesAsync(Guid tutorProfileId)
     {
         var cities = await _tutorProfileRepository.GetCitiesAsync(tutorProfileId);
-        return cities.Select(tc => new CityDto { Id = tc.City.Id, Name = tc.City.Name });
+        return cities.Select(tc => new CityDto { Id = tc.City!.Id, Name = tc.City.Name });
     }
 }
