@@ -5,7 +5,7 @@ using TutorService.Application.DTOs;
 using TutorService.Application.DTOs.Auth;
 using TutorService.Application.DTOs.User;
 using TutorService.Application.DTOs.Tutor;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 using TutorService.Application.Services;
 using TutorService.Web.Attributes;
 using TutorService.Web.Helpers;

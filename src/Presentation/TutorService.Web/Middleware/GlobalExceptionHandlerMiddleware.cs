@@ -33,6 +33,7 @@ public class GlobalExceptionHandlerMiddleware
             KeyNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, exception.Message),
             ArgumentException => (StatusCodes.Status400BadRequest, exception.Message),
+            InvalidOperationException => (StatusCodes.Status400BadRequest, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "An internal server error occurred")
         };
 

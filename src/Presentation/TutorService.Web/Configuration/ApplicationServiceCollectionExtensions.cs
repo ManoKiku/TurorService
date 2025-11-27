@@ -1,6 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 using TutorService.Application.Mappers;
 using TutorService.Application.Services;
 
@@ -21,6 +21,8 @@ public static class ApplicationServiceCollectionExtensions
         services.AddScoped<ISubCategoryService, SubCategoryService>();
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<ICityService, CityService>();
+        services.AddScoped<ILessonService, LessonService>();
+        services.AddScoped<IStudentTutorRelationService, StudentTutorRelationService>();
         
         services.AddAutoMapper(cfg =>
         {
@@ -31,6 +33,8 @@ public static class ApplicationServiceCollectionExtensions
             cfg.AddProfile<SubcategoryMappingProfile>();
             cfg.AddProfile<TagMappingProfile>();
             cfg.AddProfile<CityMappingProfile>();
+            cfg.AddProfile<LessonMappingProfile>();
+            cfg.AddProfile<StudentTutorRelationMappingProfile>();
         });
 
         return services;

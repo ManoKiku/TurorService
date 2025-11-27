@@ -1,6 +1,6 @@
 using AutoMapper;
 using TutorService.Application.DTOs.Tag;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 using TagDto = TutorService.Application.DTOs.Tag.TagDto;
 
 namespace TutorService.Application.Services;

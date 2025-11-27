@@ -1,3 +1,5 @@
+using TutorService.Application.DTOs.User;
+
 namespace TutorService.Application.DTOs.Auth;
 
 public class AuthResponse

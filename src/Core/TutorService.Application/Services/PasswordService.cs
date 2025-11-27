@@ -1,4 +1,4 @@
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 
 namespace TutorService.Application.Services;
 

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TutorService.Application.DTOs.City;
 using TutorService.Application.DTOs.Tutor;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 using TutorService.Web.Helpers;
 
 namespace TutorService.Web.Controllers;

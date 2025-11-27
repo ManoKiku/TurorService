@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TutorService.Application.Configuration;
+using TutorService.Application.Interfaces;
 using TutorService.Domain.Interfaces;
 using TutorService.Infrastructure.Data;
 using TutorService.Infrastructure.Repositories;
@@ -26,6 +27,8 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<ITutorPostRepository, TutorPostRepository>();
         services.AddScoped<ISubjectRepository, SubjectRepository>();
         services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<ILessonRepository, LessonRepository>();
+        services.AddScoped<IStudentTutorRelationRepository, StudentTutorRelationRepository>();
         
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 

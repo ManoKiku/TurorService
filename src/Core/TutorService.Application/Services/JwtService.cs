@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TutorService.Application.Configuration;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 using TutorService.Domain.Entities;
 
 namespace TutorService.Application.Services;

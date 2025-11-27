@@ -1,6 +1,6 @@
 using AutoMapper;
 using TutorService.Application.DTOs.Subject;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 using TutorService.Domain.Entities;
 using TutorService.Domain.Interfaces;
 

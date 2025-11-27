@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TutorService.Application.DTOs.Tutor;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 using TutorService.Domain.Enums;
 using TutorService.Domain.Interfaces;
 using TutorService.Web.Helpers;

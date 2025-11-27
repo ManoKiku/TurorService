@@ -10,4 +10,9 @@ public static class ControllerHelper
         if (string.IsNullOrEmpty(idClaim)) throw new UnauthorizedAccessException("User id claim missing");
         return Guid.Parse(idClaim);
     }
+
+    public static string GetUserRoleFromClaims(ClaimsPrincipal claimsPrincipal)
+    {
+        return claimsPrincipal.FindFirst(ClaimTypes.Role)?.Value ?? "Student";
+    }
 }

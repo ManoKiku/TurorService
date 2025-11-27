@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TutorService.Application.DTOs.Auth;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 
 namespace TutorService.Web.Controllers;
 

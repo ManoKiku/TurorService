@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TutorService.Application.DTOs.Subcategory;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 
 namespace TutorService.Web.Controllers;
 

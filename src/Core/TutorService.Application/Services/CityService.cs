@@ -1,6 +1,6 @@
 using AutoMapper;
 using TutorService.Application.DTOs.City;
-using TutorService.Application.Intefaces;
+using TutorService.Application.Interfaces;
 using TutorService.Domain.Entities;
 using TutorService.Domain.Interfaces;
 

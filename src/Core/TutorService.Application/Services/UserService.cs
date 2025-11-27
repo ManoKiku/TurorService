@@ -1,6 +1,6 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
-using TutorService.Application.DTOs;
+using TutorService.Application.DTOs.User;
 using TutorService.Domain.Interfaces;
 
 namespace TutorService.Application.Services;
@@ -46,7 +46,6 @@ public class UserService : IUserService
             throw new KeyNotFoundException($"User with ID {id} not found");
         }
 
-        // map request onto existing entity
         _mapper.Map(request, user);
 
         _userRepository.Update(user);

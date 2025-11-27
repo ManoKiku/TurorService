@@ -1,6 +1,15 @@
+using TutorService.Domain.Entities;
+using TutorService.Domain.Interfaces;
+
 namespace TutorService.Application.Interfaces;
 
-public class IStudentTutorRelationRepository
+public interface IStudentTutorRelationRepository : ICrudRepository<StudentTutorRelation>
 {
-    
+    Task<bool> RelationExistsAsync(Guid studentId, Guid tutorId);
+    Task<StudentTutorRelation?> GetByStudentAndTutorAsync(Guid studentId, Guid tutorId);
+    Task<IEnumerable<StudentTutorRelation>> GetByTutorAsync(Guid tutorId, string? search = null, int page = 1, int pageSize = 20);
+    Task<IEnumerable<StudentTutorRelation>> GetByStudentAsync(Guid studentId, string? search = null, int page = 1, int pageSize = 20);
+    Task<int> GetByTutorCountAsync(Guid tutorId, string? search = null);
+    Task<int> GetByStudentCountAsync(Guid studentId, string? search = null);
+    Task<bool> DeleteByStudentAndTutorAsync(Guid studentId, Guid tutorId);
 }
