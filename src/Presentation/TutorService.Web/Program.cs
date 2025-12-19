@@ -5,6 +5,7 @@ using System.Text;
 using TutorService.Application.Configuration;
 using TutorService.Infrastructure.Data;
 using TutorService.Web.Configuration;
+using TutorService.Web.Hubs;
 using TutorService.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -109,5 +110,7 @@ using (var scope = app.Services.CreateScope())
     var initializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
     await initializer.SeedAsync();
 }
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

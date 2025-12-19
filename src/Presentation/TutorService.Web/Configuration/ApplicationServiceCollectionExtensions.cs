@@ -1,5 +1,3 @@
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using TutorService.Application.Interfaces;
 using TutorService.Application.Mappers;
 using TutorService.Application.Services;
@@ -28,7 +26,13 @@ public static class ApplicationServiceCollectionExtensions
             .AddScoped<IStudentTutorRelationService, StudentTutorRelationService>()
             .AddScoped<IFileRepository, MongoFileRepository>()
             .AddScoped<IAssignmentRepository, AssignmentRepository>()
-            .AddScoped<IAssignmentService, AssignmentService>();
+            .AddScoped<IAssignmentService, AssignmentService>()
+            .AddScoped<IChatRepository, ChatRepository>()
+            .AddScoped<IMessageRepository, MessageRepository>()
+            .AddScoped<IMessageService, MessageService>()
+            .AddScoped<IMessageService, MessageService>();
+        
+        services.AddSignalR();
         
         services.AddAutoMapper(cfg =>
         {
@@ -42,6 +46,7 @@ public static class ApplicationServiceCollectionExtensions
             cfg.AddProfile<LessonMappingProfile>();
             cfg.AddProfile<StudentTutorRelationMappingProfile>();
             cfg.AddProfile<AssignmentMappingProfile>();
+            cfg.AddProfile<ChatMappingProfile>();
         });
 
         return services;
