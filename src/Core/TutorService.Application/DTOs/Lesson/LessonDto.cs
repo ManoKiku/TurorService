@@ -1,3 +1,4 @@
+using TutorService.Application.DTOs.Assigment;
 using TutorService.Domain.Enums;
 
 namespace TutorService.Application.DTOs.Lesson;
@@ -12,7 +13,9 @@ public class LessonDto
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public string Title { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public LessonStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public IEnumerable<AssignmentDto> Assignments { get; set; } = new List<AssignmentDto>();
 }

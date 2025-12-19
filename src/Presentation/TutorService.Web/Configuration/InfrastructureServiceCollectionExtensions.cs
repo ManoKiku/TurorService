@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using TutorService.Application.Configuration;
 using TutorService.Application.Interfaces;
 using TutorService.Domain.Interfaces;
@@ -16,6 +17,13 @@ public static class InfrastructureServiceCollectionExtensions
                 configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
         
+        var mongoConnectionString = configuration.GetConnectionString("MongoDB");
+        var mongoClient = new MongoClient(mongoConnectionString);
+        var mongoDatabase = mongoClient.GetDatabase("TutorServiceDb");
+
+        services.AddSingleton<IMongoDatabase>(mongoDatabase);
+        services.AddScoped<IFileRepository, MongoFileRepository>();
+        
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
         services.AddScoped(typeof(ICrudRepository<>), typeof(CrudRepository<>));
@@ -32,6 +40,8 @@ public static class InfrastructureServiceCollectionExtensions
         
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
+        
+        
         return services;
     }
 }

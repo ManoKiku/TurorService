@@ -16,6 +16,7 @@ public class LessonMappingProfile : Profile
             .ForMember(d => d.StudentName, opt => opt.MapFrom(s => 
                 s.Student != null 
                     ? $"{s.Student.FirstName} {s.Student.LastName}" 
-                    : string.Empty));
+                    : string.Empty))
+            .ForMember(d => d.Assignments, opt => opt.MapFrom(s => s.Assignments));
     }
 }

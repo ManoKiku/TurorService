@@ -142,7 +142,7 @@ public class LessonRepository : BaseRepository<Lesson>, ILessonRepository
             .ToListAsync();
     }
 
-    public async Task<Lesson?> GetByIdWithDetailsAsync(Guid id)
+    public override async Task<Lesson?> GetByIdAsync(Guid id)
     {
         return await _context.Lessons
             .Include(l => l.Tutor)
@@ -152,6 +152,15 @@ public class LessonRepository : BaseRepository<Lesson>, ILessonRepository
             .FirstOrDefaultAsync(l => l.Id == id);
     }
 
+    public async Task<Lesson?> GetByIdWithDetailsAsync(Guid id)
+    {
+        return await _context.Lessons
+            .Include(l => l.Tutor)
+            .ThenInclude(t => t!.User)
+            .Include(l => l.Student)
+            .Include(l => l.Assignments)
+            .FirstOrDefaultAsync(l => l.Id == id);
+    }
     public async Task<bool> IsUserParticipantAsync(Guid lessonId, Guid userId)
     {
         return await _context.Lessons

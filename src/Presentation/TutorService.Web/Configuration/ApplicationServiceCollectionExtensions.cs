@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using TutorService.Application.Interfaces;
 using TutorService.Application.Mappers;
 using TutorService.Application.Services;
+using TutorService.Domain.Interfaces;
+using TutorService.Infrastructure.Repositories;
 
 namespace TutorService.Web.Configuration;
 
@@ -10,19 +12,23 @@ public static class ApplicationServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<IPasswordService, PasswordService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<ITutorProfileService, TutorProfileService>();
-        services.AddScoped<ITutorPostService, TutorPostService>();
-        services.AddScoped<ISubjectService, SubjectService>();
-        services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<ISubCategoryService, SubCategoryService>();
-        services.AddScoped<ITagService, TagService>();
-        services.AddScoped<ICityService, CityService>();
-        services.AddScoped<ILessonService, LessonService>();
-        services.AddScoped<IStudentTutorRelationService, StudentTutorRelationService>();
+        services.AddScoped<IAuthService, AuthService>()
+            .AddScoped<IJwtService, JwtService>()
+            .AddScoped<IPasswordService, PasswordService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<ITutorProfileService, TutorProfileService>()
+            .AddScoped<ITutorPostService, TutorPostService>()
+            .AddScoped<ISubjectService, SubjectService>()
+            .AddScoped<ICategoryService, CategoryService>()
+            .AddScoped<ISubCategoryService, SubCategoryService>()
+            .AddScoped<ITagService, TagService>()
+            .AddScoped<ICityService, CityService>()
+            .AddScoped<ILessonRepository, LessonRepository>()
+            .AddScoped<ILessonService, LessonService>()
+            .AddScoped<IStudentTutorRelationService, StudentTutorRelationService>()
+            .AddScoped<IFileRepository, MongoFileRepository>()
+            .AddScoped<IAssignmentRepository, AssignmentRepository>()
+            .AddScoped<IAssignmentService, AssignmentService>();
         
         services.AddAutoMapper(cfg =>
         {
@@ -35,6 +41,7 @@ public static class ApplicationServiceCollectionExtensions
             cfg.AddProfile<CityMappingProfile>();
             cfg.AddProfile<LessonMappingProfile>();
             cfg.AddProfile<StudentTutorRelationMappingProfile>();
+            cfg.AddProfile<AssignmentMappingProfile>();
         });
 
         return services;
