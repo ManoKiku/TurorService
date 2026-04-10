@@ -6,7 +6,7 @@ using TutorService.Application.Interfaces;
 namespace TutorService.Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/subcategories")]
 public class SubcategoriesController : ControllerBase
 {
     private readonly ISubCategoryService _service;

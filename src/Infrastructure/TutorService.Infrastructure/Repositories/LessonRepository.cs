@@ -25,6 +25,7 @@ public class LessonRepository : BaseRepository<Lesson>, ILessonRepository
             .Include(l => l.Tutor)
             .ThenInclude(t => t!.User)
             .Include(l => l.Student)
+            .Include(l => l.Assignments)
             .AsQueryable();
 
         if (userId.HasValue)

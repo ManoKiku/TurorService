@@ -8,7 +8,7 @@ using TutorService.Web.Helpers;
 namespace TutorService.Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/assignments")]
 [Authorize]
 public class AssignmentsController : ControllerBase
 {
@@ -78,5 +78,14 @@ public class AssignmentsController : ControllerBase
         var fileResponse = await _assignmentService.DownloadFileAsync(id, currentUserId, currentUserRole);
         
         return File(fileResponse.FileStream, fileResponse.ContentType, fileResponse.FileName);
+    }
+    
+    [HttpPost("from-saved-content/{savedContentId}")]
+    [Authorize(Roles = "Tutor")]
+    public async Task<ActionResult<AssignmentDto>> CreateFromSavedContent(Guid savedContentId, [FromQuery] Guid lessonId)
+    {
+        var tutorId = ControllerHelper.GetUserIdFromClaims(User);
+        var assignment = await _assignmentService.CreateFromSavedContentAsync(tutorId, savedContentId, lessonId);
+        return CreatedAtAction(nameof(GetAssignment), new { id = assignment.Id }, assignment);
     }
 }

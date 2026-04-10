@@ -15,6 +15,7 @@ public class AssignmentService : IAssignmentService
     private readonly ITutorProfileRepository _tutorProfileRepository;
     private readonly IMapper _mapper;
     private readonly ILogger<AssignmentService> _logger;
+    private readonly ISavedContentRepository _savedContentRepository;
 
     public AssignmentService(
         IAssignmentRepository assignmentRepository,
@@ -22,7 +23,8 @@ public class AssignmentService : IAssignmentService
         IFileRepository fileRepository,
         IMapper mapper,
         ILogger<AssignmentService> logger,
-        ITutorProfileRepository tutorProfileRepository)
+        ITutorProfileRepository tutorProfileRepository,
+        ISavedContentRepository savedContentRepository)
     {
         _assignmentRepository = assignmentRepository;
         _lessonRepository = lessonRepository;
@@ -30,6 +32,7 @@ public class AssignmentService : IAssignmentService
         _mapper = mapper;
         _logger = logger;
         _tutorProfileRepository = tutorProfileRepository;
+        _savedContentRepository = savedContentRepository;
     }
 
     public async Task<AssignmentDto> CreateAsync(Guid tutorId, AssignmentCreateRequest request)
@@ -173,5 +176,50 @@ public class AssignmentService : IAssignmentService
             FileName = assignment.FileName,
             FileSize = assignment.FileSize
         };
+    }
+    
+    public async Task<AssignmentDto> CreateFromSavedContentAsync(Guid tutorId, Guid savedContentId, Guid lessonId)
+    {
+        var tutorProfile = await _tutorProfileRepository.GetByUserIdAsync(tutorId);
+        if (tutorProfile is null)
+            throw new KeyNotFoundException("Tutor not found");
+
+        var lesson = await _lessonRepository.GetByIdAsync(lessonId);
+        if (lesson == null)
+            throw new KeyNotFoundException("Lesson not found");
+        if (lesson.TutorId != tutorProfile.Id)
+            throw new UnauthorizedAccessException("You can only create assignments for your own lessons");
+
+        var savedContent = await _savedContentRepository.GetByIdWithTutorAsync(savedContentId);
+        if (savedContent == null)
+            throw new KeyNotFoundException("Saved content not found");
+        if (savedContent.TutorId != tutorProfile.Id)
+            throw new UnauthorizedAccessException("You can only use your own saved content");
+
+        await using var fileStream = await _fileRepository.DownloadFileAsync(savedContent.MongoFileId);
+        
+        string newMongoFileId;
+        using (var memoryStream = new MemoryStream())
+        {
+            await fileStream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+            newMongoFileId = await _fileRepository.UploadFileAsync(savedContent.FileName, memoryStream);
+        }
+
+        var assignment = new Assignment
+        {
+            LessonId = lessonId,
+            FileName = savedContent.FileName,
+            MongoFileId = newMongoFileId,
+            FileSize = savedContent.FileSize,
+            ContentType = savedContent.ContentType,
+            UploadedAt = DateTime.UtcNow
+        };
+
+        await _assignmentRepository.AddAsync(assignment);
+        await _assignmentRepository.SaveChangesAsync();
+
+        var assignmentWithDetails = await _assignmentRepository.GetByIdWithDetailsAsync(assignment.Id);
+        return _mapper.Map<AssignmentDto>(assignmentWithDetails!);
     }
 }

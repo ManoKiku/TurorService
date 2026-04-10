@@ -9,4 +9,5 @@ public interface IAssignmentService
     Task<AssignmentDto?> GetByIdAsync(Guid id, Guid currentUserId, string currentUserRole);
     Task<bool> DeleteAsync(Guid id, Guid currentUserId, string currentUserRole);
     Task<FileDownloadResponse> DownloadFileAsync(Guid id, Guid currentUserId, string currentUserRole);
+    Task<AssignmentDto> CreateFromSavedContentAsync(Guid tutorId, Guid savedContentId, Guid lessonId);
 }

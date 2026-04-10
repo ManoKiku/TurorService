@@ -8,7 +8,7 @@ using TutorService.Web.Helpers;
 namespace TutorService.Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/tutors")]
 public class TutorsController : ControllerBase
 {
     private readonly ITutorProfileService _tutorService;

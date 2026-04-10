@@ -6,7 +6,7 @@ using TutorService.Application.Interfaces;
 namespace TutorService.Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/cities")]
 public class CitiesController : ControllerBase
 {
     private readonly ICityService _cityService;

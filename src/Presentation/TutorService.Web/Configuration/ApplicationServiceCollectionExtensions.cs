@@ -33,7 +33,8 @@ public static class ApplicationServiceCollectionExtensions
             .AddScoped<IChatService, ChatService>()
             .AddScoped<IMessageRepository, MessageRepository>()
             .AddScoped<IMessageService, MessageService>()
-            .AddScoped<IMessageService, MessageService>();
+            .AddScoped<IMessageService, MessageService>()
+            .AddScoped<ISavedContentService, SavedContentService>();
         
         services.AddSignalR();
         
@@ -50,6 +51,7 @@ public static class ApplicationServiceCollectionExtensions
             cfg.AddProfile<StudentTutorRelationMappingProfile>();
             cfg.AddProfile<AssignmentMappingProfile>();
             cfg.AddProfile<ChatMappingProfile>();
+            cfg.AddProfile<SavedContentMappingProfile>();
         });
 
         return services;

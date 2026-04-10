@@ -10,6 +10,7 @@ public class TutorProfile : BaseEntity
     public decimal HourlyRate { get; set; }
 
     public ICollection<TutorPost> TutorPosts { get; set; } = new List<TutorPost>();
+    public ICollection<SavedContent> SavedContents { get; set; } = new List<SavedContent>();
     public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
     public ICollection<Chat> Chats { get; set; } = new List<Chat>();
     public ICollection<TutorCity> TutorCities { get; set; } = new List<TutorCity>();

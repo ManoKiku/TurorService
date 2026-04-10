@@ -25,6 +25,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<TutorPostTag> TutorPostTags { get; set; }
     public DbSet<TutorCity> TutorCities { get; set; }
     public DbSet<StudentTutorRelation> StudentTutorRelations { get; set; }
+    public DbSet<SavedContent> SavedContents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,6 +105,14 @@ public class ApplicationDbContext : DbContext
                 .HasForeignKey(m => m.SenderId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+        modelBuilder.Entity<SavedContent>(entity =>
+        {   
+            entity.HasOne(sc => sc.Tutor)
+                .WithMany(t => t.SavedContents)
+                .HasForeignKey(sc => sc.TutorId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
@@ -119,6 +128,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<StudentTutorRelation>().HasQueryFilter(str => !str.Tutor!.IsDeleted);
         modelBuilder.Entity<TutorCity>().HasQueryFilter(tc => !tc.Tutor!.IsDeleted);
         modelBuilder.Entity<TutorPostTag>().HasQueryFilter(tpt => !tpt.TutorPost!.IsDeleted);
+        modelBuilder.Entity<SavedContent>().HasQueryFilter(sc => !sc.IsDeleted);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -24,19 +24,20 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddSingleton<IMongoDatabase>(mongoDatabase);
         services.AddScoped<IFileRepository, MongoFileRepository>();
         
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-        services.AddScoped(typeof(ICrudRepository<>), typeof(CrudRepository<>));
-        
-        services.AddScoped<DbInitializer>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-        services.AddScoped<ITutorProfileRepository, TutorProfileRepository>();
-        services.AddScoped<ITutorPostRepository, TutorPostRepository>();
-        services.AddScoped<ISubjectRepository, SubjectRepository>();
-        services.AddScoped<ITagRepository, TagRepository>();
-        services.AddScoped<ILessonRepository, LessonRepository>();
-        services.AddScoped<IStudentTutorRelationRepository, StudentTutorRelationRepository>();
+        services.AddScoped<IUserRepository, UserRepository>()
+            .AddScoped(typeof(IRepository<>), typeof(BaseRepository<>))
+            .AddScoped(typeof(ICrudRepository<>), typeof(CrudRepository<>));
+
+        services.AddScoped<DbInitializer>()
+            .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
+            .AddScoped<ITutorProfileRepository, TutorProfileRepository>()
+            .AddScoped<ITutorPostRepository, TutorPostRepository>()
+            .AddScoped<ISubjectRepository, SubjectRepository>()
+            .AddScoped<ITagRepository, TagRepository>()
+            .AddScoped<ILessonRepository, LessonRepository>()
+            .AddScoped<IStudentTutorRelationRepository, StudentTutorRelationRepository>()
+            .AddScoped<ISavedContentRepository, SavedContentRepository>();
         
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 

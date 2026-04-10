@@ -6,7 +6,7 @@ using TutorService.Application.Interfaces;
 namespace TutorService.Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/subjects")]
 public class SubjectsController : ControllerBase
 {
     private readonly ISubjectService _service;

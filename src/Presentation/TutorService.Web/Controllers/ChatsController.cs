@@ -9,7 +9,7 @@ using TutorService.Web.Helpers;
 namespace TutorService.Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/chats")]
 [Authorize]
 public class ChatsController : ControllerBase
 {

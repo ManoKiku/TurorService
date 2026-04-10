@@ -6,7 +6,7 @@ using TutorService.Application.Interfaces;
 namespace TutorService.Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/tags")]
 public class TagsController : ControllerBase
 {
     private readonly ITagService _tagService;
