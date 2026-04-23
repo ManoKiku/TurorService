@@ -92,7 +92,8 @@ builder.Services.AddAuthentication(options =>
             
             var path = context.HttpContext.Request.Path;
             if (!string.IsNullOrEmpty(accessToken) && 
-                path.StartsWithSegments("/chatHub"))
+                path.StartsWithSegments("/chatHub")||
+                path.StartsWithSegments("/videoCallHub"))
             {
                 context.Token = accessToken;
             }
@@ -151,6 +152,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapHub<ChatHub>("/chatHub");
+app.MapHub<VideoCallHub>("/videoCallHub");
+
 using (var scope = app.Services.CreateScope())
 {
     var initializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
@@ -158,8 +162,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapControllers();
-app.MapHub<ChatHub>("/chatHub");
-
-
 
 app.Run();

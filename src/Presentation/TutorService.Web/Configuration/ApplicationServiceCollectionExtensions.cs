@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using TutorService.Application.Interfaces;
 using TutorService.Application.Mappers;
@@ -36,7 +37,11 @@ public static class ApplicationServiceCollectionExtensions
             .AddScoped<IMessageService, MessageService>()
             .AddScoped<ISavedContentService, SavedContentService>();
         
-        services.AddSignalR();
+        services.AddSignalR().AddJsonProtocol(options =>
+        {
+            options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        });
+        
         
         services.AddAutoMapper(cfg =>
         {
