@@ -7,5 +7,7 @@ public class TutorProfileDto
     public required string Bio { get; set; }
     public required string Education { get; set; }
     public required int ExperienceYears { get; set; }
+    public double? AverageRating { get; set; }
+    public int TotalReviews { get; set; }
     public required decimal HourlyRate { get; set; }
 }

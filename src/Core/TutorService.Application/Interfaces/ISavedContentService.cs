@@ -9,4 +9,7 @@ public interface ISavedContentService
     Task<IEnumerable<SavedContentDto>> GetByTutorAsync(Guid tutorId);
     Task<bool> DeleteAsync(Guid id, Guid tutorId);
     Task<FileDownloadResponse> DownloadFileAsync(Guid id, Guid tutorId);
+    Task<SavedContentFolderDto> CreateFolderAsync(Guid tutorId, SavedContentFolderCreateRequest request);
+    Task<IEnumerable<SavedContentFolderDto>> GetFoldersAsync(Guid tutorId);
+    Task DeleteFolderAsync(Guid folderId, Guid tutorId);
 }

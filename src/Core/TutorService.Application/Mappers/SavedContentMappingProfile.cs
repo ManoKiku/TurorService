@@ -8,6 +8,11 @@ public class SavedContentMappingProfile : Profile
 {
     public SavedContentMappingProfile()
     {
-        CreateMap<SavedContent, SavedContentDto>();
+        CreateMap<SavedContent, SavedContentDto>()
+            .ForMember(d => d.FolderId, opt => opt.MapFrom(s => s.FolderId))
+            .ForMember(d => d.FolderName, opt => opt.MapFrom(s => s.Folder != null ? s.Folder.Name : null));
+
+        CreateMap<SavedContentFolder, SavedContentFolderDto>()
+            .ForMember(d => d.ItemCount, opt => opt.MapFrom(s => s.SavedContents.Count));
     }
 }

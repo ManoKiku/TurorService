@@ -37,11 +37,13 @@ public static class InfrastructureServiceCollectionExtensions
             .AddScoped<ITagRepository, TagRepository>()
             .AddScoped<ILessonRepository, LessonRepository>()
             .AddScoped<IStudentTutorRelationRepository, StudentTutorRelationRepository>()
-            .AddScoped<ISavedContentRepository, SavedContentRepository>();
+            .AddScoped<ISavedContentRepository, SavedContentRepository>()
+            .AddScoped<IReviewRepository, ReviewRepository>()
+            .AddScoped<ILessonTaskRepository, LessonTaskRepository>()
+            .AddScoped<ILessonCommentRepository, LessonCommentRepository>()
+            .AddScoped<ISavedContentFolderRepository, SavedContentFolderRepository>();
         
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
-
-        
         
         return services;
     }

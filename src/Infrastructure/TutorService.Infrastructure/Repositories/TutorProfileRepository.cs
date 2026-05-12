@@ -20,6 +20,7 @@ public class TutorProfileRepository : BaseRepository<TutorProfile>, ITutorProfil
                 .ThenInclude(p => p.Subject)
             .Include(tp => tp.Lessons)
             .Include(tp => tp.Chats)
+            .Include(tp => tp.Reviews)
             .FirstOrDefaultAsync(tp => tp.UserId == userId && !tp.IsDeleted);
     }
 
@@ -34,6 +35,7 @@ public class TutorProfileRepository : BaseRepository<TutorProfile>, ITutorProfil
             .Include(tp => tp.Lessons)
             .Include(tp => tp.Chats)
             .Include(tp => tp.User)
+            .Include(tp => tp.Reviews)
             .FirstOrDefaultAsync();
     }
 
@@ -112,6 +114,7 @@ public class TutorProfileRepository : BaseRepository<TutorProfile>, ITutorProfil
                 .ThenInclude(p => p.Subject)
             .Include(tp => tp.TutorCities)
                 .ThenInclude(tc => tc.City)
+            .Include(tp => tp.Reviews)
             .AsQueryable();
 
         if (categoryId.HasValue)

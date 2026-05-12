@@ -13,5 +13,7 @@ public class TutorPostDto
     public required decimal HourlyRate { get; set; }
     public required PostStatus Status { get; set; }
     public required string? AdminComment { get; set; }
+    public double? AverageRating { get; set; }
+    public int TotalReviews { get; set; }
     public IEnumerable<TagDto>? Tags { get; set; }
 }

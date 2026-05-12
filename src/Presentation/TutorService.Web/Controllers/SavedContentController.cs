@@ -27,7 +27,7 @@ public class SavedContentController : ControllerBase
     {
         var tutorId = ControllerHelper.GetUserIdFromClaims(User);
         var result = await _savedContentService.CreateAsync(tutorId, request);
-        return CreatedAtAction(null, new { id = result.Id }, result);
+        return CreatedAtAction(nameof(GetAll), new { id = result.Id }, result);
     }
 
     [HttpGet]
@@ -54,5 +54,29 @@ public class SavedContentController : ControllerBase
         var tutorId = ControllerHelper.GetUserIdFromClaims(User);
         var fileResponse = await _savedContentService.DownloadFileAsync(id, tutorId);
         return File(fileResponse.FileStream, fileResponse.ContentType, fileResponse.FileName);
+    }
+    
+    [HttpPost("folders")]
+    public async Task<ActionResult<SavedContentFolderDto>> CreateFolder([FromBody] SavedContentFolderCreateRequest request)
+    {
+        var tutorId = ControllerHelper.GetUserIdFromClaims(User);
+        var folder = await _savedContentService.CreateFolderAsync(tutorId, request);
+        return CreatedAtAction(nameof(GetFolders), new { id = folder.Id }, folder);
+    }
+
+    [HttpGet("folders")]
+    public async Task<ActionResult<IEnumerable<SavedContentFolderDto>>> GetFolders()
+    {
+        var tutorId = ControllerHelper.GetUserIdFromClaims(User);
+        var folders = await _savedContentService.GetFoldersAsync(tutorId);
+        return Ok(folders);
+    }
+
+    [HttpDelete("folders/{folderId}")]
+    public async Task<IActionResult> DeleteFolder(Guid folderId)
+    {
+        var tutorId = ControllerHelper.GetUserIdFromClaims(User);
+        await _savedContentService.DeleteFolderAsync(folderId, tutorId);
+        return NoContent();
     }
 }

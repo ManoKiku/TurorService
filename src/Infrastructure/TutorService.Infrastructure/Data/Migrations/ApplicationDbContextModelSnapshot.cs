@@ -220,6 +220,88 @@ namespace TutorService.Infrastructure.Data.Migrations
                     b.ToTable("Lessons");
                 });
 
+            modelBuilder.Entity("TutorService.Domain.Entities.LessonComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TutorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("TutorId");
+
+                    b.ToTable("LessonComments");
+                });
+
+            modelBuilder.Entity("TutorService.Domain.Entities.LessonTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Link")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MongoFileId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("LessonTasks");
+                });
+
             modelBuilder.Entity("TutorService.Domain.Entities.Message", b =>
                 {
                     b.Property<Guid>("Id")
@@ -317,6 +399,52 @@ namespace TutorService.Infrastructure.Data.Migrations
                     b.ToTable("RefreshTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TutorService.Domain.Entities.Review", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("TutorProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("TutorProfileId");
+
+                    b.HasIndex("UserId", "TutorProfileId")
+                        .IsUnique();
+
+                    b.ToTable("Reviews", (string)null);
+                });
+
             modelBuilder.Entity("TutorService.Domain.Entities.SavedContent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -337,6 +465,9 @@ namespace TutorService.Infrastructure.Data.Migrations
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
 
+                    b.Property<Guid?>("FolderId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -352,9 +483,40 @@ namespace TutorService.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FolderId");
+
                     b.HasIndex("TutorId");
 
                     b.ToTable("SavedContents");
+                });
+
+            modelBuilder.Entity("TutorService.Domain.Entities.SavedContentFolder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TutorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TutorId");
+
+                    b.ToTable("SavedContentFolders");
                 });
 
             modelBuilder.Entity("TutorService.Domain.Entities.StudentTutorRelation", b =>
@@ -555,6 +717,10 @@ namespace TutorService.Infrastructure.Data.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
 
+                    b.Property<string>("AvatarMongoFileId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -673,6 +839,44 @@ namespace TutorService.Infrastructure.Data.Migrations
                     b.Navigation("Tutor");
                 });
 
+            modelBuilder.Entity("TutorService.Domain.Entities.LessonComment", b =>
+                {
+                    b.HasOne("TutorService.Domain.Entities.Lesson", "Lesson")
+                        .WithMany("Comments")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TutorProfile", "Tutor")
+                        .WithMany()
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Tutor");
+                });
+
+            modelBuilder.Entity("TutorService.Domain.Entities.LessonTask", b =>
+                {
+                    b.HasOne("TutorService.Domain.Entities.Lesson", "Lesson")
+                        .WithMany("Tasks")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TutorService.Domain.Entities.User", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("TutorService.Domain.Entities.Message", b =>
                 {
                     b.HasOne("TutorService.Domain.Entities.Chat", "Chat")
@@ -703,12 +907,49 @@ namespace TutorService.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TutorService.Domain.Entities.Review", b =>
+                {
+                    b.HasOne("TutorProfile", "TutorProfile")
+                        .WithMany("Reviews")
+                        .HasForeignKey("TutorProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TutorService.Domain.Entities.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TutorProfile");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TutorService.Domain.Entities.SavedContent", b =>
                 {
+                    b.HasOne("TutorService.Domain.Entities.SavedContentFolder", "Folder")
+                        .WithMany("SavedContents")
+                        .HasForeignKey("FolderId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("TutorProfile", "Tutor")
                         .WithMany("SavedContents")
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Folder");
+
+                    b.Navigation("Tutor");
+                });
+
+            modelBuilder.Entity("TutorService.Domain.Entities.SavedContentFolder", b =>
+                {
+                    b.HasOne("TutorProfile", "Tutor")
+                        .WithMany("SavedContentFolders")
+                        .HasForeignKey("TutorId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Tutor");
@@ -826,6 +1067,10 @@ namespace TutorService.Infrastructure.Data.Migrations
 
                     b.Navigation("Lessons");
 
+                    b.Navigation("Reviews");
+
+                    b.Navigation("SavedContentFolders");
+
                     b.Navigation("SavedContents");
 
                     b.Navigation("StudentTutorRelations");
@@ -853,6 +1098,15 @@ namespace TutorService.Infrastructure.Data.Migrations
             modelBuilder.Entity("TutorService.Domain.Entities.Lesson", b =>
                 {
                     b.Navigation("Assignments");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("TutorService.Domain.Entities.SavedContentFolder", b =>
+                {
+                    b.Navigation("SavedContents");
                 });
 
             modelBuilder.Entity("TutorService.Domain.Entities.Subcategory", b =>
@@ -882,6 +1136,8 @@ namespace TutorService.Infrastructure.Data.Migrations
                     b.Navigation("LessonsAsStudent");
 
                     b.Navigation("Messages");
+
+                    b.Navigation("Reviews");
 
                     b.Navigation("TutorProfiles");
 

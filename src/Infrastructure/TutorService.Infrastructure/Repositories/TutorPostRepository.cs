@@ -24,6 +24,8 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
         return await _dbSet
             .Include(p => p.Tutor)
                 .ThenInclude(t => t!.TutorCities)
+            .Include(p => p.Tutor)
+                .ThenInclude(t => t!.Reviews)
             .Include(p => p.TutorPostTags)
                 .ThenInclude(tpt => tpt.Tag)
             .Include(p => p.Subject)
@@ -93,6 +95,8 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
                 .ThenInclude(t => t!.TutorCities)
             .Include(p => p.Tutor)
                 .ThenInclude(t => t!.User)
+            .Include(p => p.Tutor)
+                .ThenInclude(t => t!.Reviews)
             .Include(p => p.TutorPostTags)
                 .ThenInclude(tpt => tpt.Tag)
             .Include(p => p.Subject)

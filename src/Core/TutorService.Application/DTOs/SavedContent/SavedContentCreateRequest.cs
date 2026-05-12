@@ -5,4 +5,5 @@ namespace TutorService.Application.DTOs.SavedContent;
 public class SavedContentCreateRequest
 {
     public IFormFile File { get; set; } = null!;
+    public Guid? FolderId { get; set; }
 }

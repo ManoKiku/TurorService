@@ -14,4 +14,6 @@ public class Lesson : BaseEntity
     public LessonStatus Status { get; set; }
 
     public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
+    public ICollection<LessonTask> Tasks { get; set; } = new List<LessonTask>();
+    public ICollection<LessonComment> Comments { get; set; } = new List<LessonComment>();
 }

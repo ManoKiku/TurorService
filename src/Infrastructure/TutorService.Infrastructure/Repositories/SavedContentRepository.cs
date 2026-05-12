@@ -13,6 +13,7 @@ public class SavedContentRepository : BaseRepository<SavedContent>, ISavedConten
     {
         return await _dbSet
             .Include(sc => sc.Tutor)
+            .Include(sc => sc.Folder)
             .Where(sc => sc.TutorId == tutorId)
             .OrderByDescending(sc => sc.CreatedAt)
             .ToListAsync();
@@ -22,6 +23,7 @@ public class SavedContentRepository : BaseRepository<SavedContent>, ISavedConten
     {
         return await _dbSet
             .Include(sc => sc.Tutor)
+            .Include(sc => sc.Folder) 
             .FirstOrDefaultAsync(sc => sc.Id == id);
     }
 }

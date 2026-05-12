@@ -84,4 +84,50 @@ public class UsersController : ControllerBase
         }
         return BadRequest(new { message = "Failed to change password" });
     }
+    
+    [HttpGet("{id}/avatar")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAvatar(Guid id)
+    {
+        var stream = await _userService.GetAvatarAsync(id);
+        if (stream == null)
+            return NotFound(new { message = "Avatar not found" });
+
+        const string defaultContentType = "image/jpeg";
+        return File(stream, defaultContentType);
+    }
+
+    [HttpPost("{id}/avatar")]
+    [Authorize]
+    public async Task<IActionResult> UploadAvatar(Guid id, [FromForm] AvatarUploadRequest request)
+    {
+        var currentUserId = ControllerHelper.GetUserIdFromClaims(User);
+        var role = ControllerHelper.GetUserRoleFromClaims(User);
+        
+        if (currentUserId != id && role != "Admin")
+            return Forbid();
+
+        if (request.Avatar == null || request.Avatar.Length == 0)
+            return BadRequest(new { message = "File is required" });
+        
+        var fileId = await _userService.UploadAvatarAsync(id, request.Avatar);
+        return Ok(new { fileId, message = "Avatar uploaded successfully" });
+    }
+
+    [HttpDelete("{id}/avatar")]
+    [Authorize]
+    public async Task<IActionResult> DeleteAvatar(Guid id)
+    {
+        var currentUserId = ControllerHelper.GetUserIdFromClaims(User);
+        var role = ControllerHelper.GetUserRoleFromClaims(User);
+        
+        if (currentUserId != id && role != "Admin")
+            return Forbid();
+
+        var deleted = await _userService.DeleteAvatarAsync(id);
+        if (!deleted)
+            return NotFound(new { message = "Avatar not found" });
+        
+        return NoContent();
+    }
 }

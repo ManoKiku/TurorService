@@ -1,3 +1,5 @@
+using TutorService.Infrastructure.Data.Configurations;
+
 namespace TutorService.Infrastructure.Data;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +28,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<TutorCity> TutorCities { get; set; }
     public DbSet<StudentTutorRelation> StudentTutorRelations { get; set; }
     public DbSet<SavedContent> SavedContents { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    public DbSet<LessonTask> LessonTasks { get; set; }
+    public DbSet<LessonComment> LessonComments { get; set; }
+    public DbSet<SavedContentFolder> SavedContentFolders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -112,6 +118,50 @@ public class ApplicationDbContext : DbContext
                 .WithMany(t => t.SavedContents)
                 .HasForeignKey(sc => sc.TutorId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            entity.HasOne(sc => sc.Folder)
+                .WithMany(f => f.SavedContents)
+                .HasForeignKey(sc => sc.FolderId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+        
+        modelBuilder.Entity<LessonTask>(entity =>
+        {
+            entity.HasOne(lt => lt.Lesson)
+                .WithMany(l => l.Tasks)
+                .HasForeignKey(lt => lt.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(lt => lt.Student)
+                .WithMany()
+                .HasForeignKey(lt => lt.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<LessonComment>(entity =>
+        {
+            entity.HasOne(lc => lc.Lesson)
+                .WithMany(l => l.Comments)
+                .HasForeignKey(lc => lc.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(lc => lc.Tutor)
+                .WithMany()
+                .HasForeignKey(lc => lc.TutorId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        
+        modelBuilder.Entity<SavedContentFolder>(entity =>
+        {
+            entity.HasOne(f => f.Tutor)
+                .WithMany(t => t.SavedContentFolders)
+                .HasForeignKey(f => f.TutorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(f => f.SavedContents)
+                .WithOne(sc => sc.Folder)
+                .HasForeignKey(sc => sc.FolderId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
@@ -123,12 +173,15 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Chat>().HasQueryFilter(c => !c.IsDeleted);
         modelBuilder.Entity<Message>().HasQueryFilter(m => !m.IsDeleted);
         modelBuilder.Entity<RefreshToken>().HasQueryFilter(rt => !rt.IsDeleted);
-
+        modelBuilder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
         modelBuilder.Entity<StudentTutorRelation>().HasQueryFilter(str => !str.Student!.IsDeleted);
         modelBuilder.Entity<StudentTutorRelation>().HasQueryFilter(str => !str.Tutor!.IsDeleted);
         modelBuilder.Entity<TutorCity>().HasQueryFilter(tc => !tc.Tutor!.IsDeleted);
         modelBuilder.Entity<TutorPostTag>().HasQueryFilter(tpt => !tpt.TutorPost!.IsDeleted);
         modelBuilder.Entity<SavedContent>().HasQueryFilter(sc => !sc.IsDeleted);
+        modelBuilder.Entity<LessonTask>().HasQueryFilter(lt => !lt.IsDeleted);
+        modelBuilder.Entity<LessonComment>().HasQueryFilter(lc => !lc.IsDeleted);
+        modelBuilder.Entity<SavedContentFolder>().HasQueryFilter(f => !f.IsDeleted);
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

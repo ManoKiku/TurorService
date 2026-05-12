@@ -13,12 +13,14 @@ public class SavedContentService : ISavedContentService
     {
         private readonly ISavedContentRepository _savedContentRepository;
         private readonly ITutorProfileRepository _tutorProfileRepository;
+        private readonly ISavedContentFolderRepository _folderRepository;
         private readonly IFileRepository _fileRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<SavedContentService> _logger;
 
         public SavedContentService(
             ISavedContentRepository savedContentRepository,
+            ISavedContentFolderRepository folderRepository,
             ITutorProfileRepository tutorProfileRepository,
             IFileRepository fileRepository,
             IMapper mapper,
@@ -29,6 +31,7 @@ public class SavedContentService : ISavedContentService
             _fileRepository = fileRepository;
             _mapper = mapper;
             _logger = logger;
+            _folderRepository = folderRepository;
         }
 
         public async Task<SavedContentDto> CreateAsync(Guid tutorId, SavedContentCreateRequest request)
@@ -126,5 +129,55 @@ public class SavedContentService : ISavedContentService
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(ext))
                 throw new ArgumentException("Invalid file type");
+        }
+        
+        public async Task<SavedContentFolderDto> CreateFolderAsync(Guid tutorId, SavedContentFolderCreateRequest request)
+        {
+            var tutorProfile = await _tutorProfileRepository.GetByUserIdAsync(tutorId);
+            if (tutorProfile is null)
+                throw new KeyNotFoundException("Tutor profile not found");
+
+            if (string.IsNullOrWhiteSpace(request.Name))
+                throw new ArgumentException("Folder name cannot be empty");
+
+            var folder = new SavedContentFolder
+            {
+                TutorId = tutorProfile.Id,
+                Name = request.Name.Trim()
+            };
+
+            await _folderRepository.AddAsync(folder);
+            await _folderRepository.SaveChangesAsync();
+
+            return _mapper.Map<SavedContentFolderDto>(folder);
+        }
+
+        public async Task<IEnumerable<SavedContentFolderDto>> GetFoldersAsync(Guid tutorId)
+        {
+            var tutorProfile = await _tutorProfileRepository.GetByUserIdAsync(tutorId);
+            if (tutorProfile is null)
+                throw new KeyNotFoundException("Tutor profile not found");
+
+            var folders = await _folderRepository.GetByTutorIdAsync(tutorProfile.Id);
+            return _mapper.Map<IEnumerable<SavedContentFolderDto>>(folders);
+        }
+
+        public async Task DeleteFolderAsync(Guid folderId, Guid tutorId)
+        {
+            var folder = await _folderRepository.GetByIdWithContentsAsync(folderId);
+            if (folder == null)
+                throw new KeyNotFoundException("Folder not found");
+
+            var tutorProfile = await _tutorProfileRepository.GetByUserIdAsync(tutorId);
+            if (tutorProfile is null || folder.TutorId != tutorProfile.Id)
+                throw new UnauthorizedAccessException("You can only delete your own folders");
+
+            foreach (var content in folder.SavedContents)
+            {
+                content.FolderId = null;
+            }
+
+            _folderRepository.Remove(folder);
+            await _folderRepository.SaveChangesAsync();
         }
     }

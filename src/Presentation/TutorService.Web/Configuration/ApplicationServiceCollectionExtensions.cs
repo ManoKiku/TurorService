@@ -35,7 +35,10 @@ public static class ApplicationServiceCollectionExtensions
             .AddScoped<IMessageRepository, MessageRepository>()
             .AddScoped<IMessageService, MessageService>()
             .AddScoped<IMessageService, MessageService>()
-            .AddScoped<ISavedContentService, SavedContentService>();
+            .AddScoped<ISavedContentService, SavedContentService>()
+            .AddScoped<IReviewService, ReviewService>()
+            .AddScoped<ILessonTaskService, LessonTaskService>()
+            .AddScoped<ILessonCommentService, LessonCommentService>();
         
         services.AddSignalR().AddJsonProtocol(options =>
         {
@@ -56,6 +59,10 @@ public static class ApplicationServiceCollectionExtensions
             cfg.AddProfile<StudentTutorRelationMappingProfile>();
             cfg.AddProfile<AssignmentMappingProfile>();
             cfg.AddProfile<ChatMappingProfile>();
+            cfg.AddProfile<SavedContentMappingProfile>();
+            cfg.AddProfile<ReviewMappingProfile>();
+            cfg.AddProfile<LessonTaskMappingProfile>();
+            cfg.AddProfile<LessonCommentMappingProfile>();
             cfg.AddProfile<SavedContentMappingProfile>();
         });
 
