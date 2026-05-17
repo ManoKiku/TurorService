@@ -67,6 +67,9 @@ public class TutorProfileRepository : BaseRepository<TutorProfile>, ITutorProfil
             .FirstOrDefaultAsync(tp => tp.Id == tutorProfileId && !tp.IsDeleted);
 
         if (profile == null) throw new KeyNotFoundException("Tutor profile not found");
+        
+        var city = await _context.Cities.FirstOrDefaultAsync(c => c.Id == cityId);
+        if (city == null) throw new KeyNotFoundException("City not found");
 
         if (!profile.TutorCities.Any(tc => tc.CityId == cityId))
         {

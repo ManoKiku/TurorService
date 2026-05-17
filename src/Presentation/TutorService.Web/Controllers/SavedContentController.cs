@@ -26,6 +26,7 @@ public class SavedContentController : ControllerBase
     public async Task<ActionResult<SavedContentDto>> Create([FromForm] SavedContentCreateRequest request)
     {
         var tutorId = ControllerHelper.GetUserIdFromClaims(User);
+        Console.WriteLine($"Received FolderId: {request.FolderId}");
         var result = await _savedContentService.CreateAsync(tutorId, request);
         return CreatedAtAction(nameof(GetAll), new { id = result.Id }, result);
     }

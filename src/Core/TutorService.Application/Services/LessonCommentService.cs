@@ -61,8 +61,19 @@ public class LessonCommentService : ILessonCommentService
         var lesson = await _lessonRepository.GetByIdAsync(lessonId);
         if (lesson == null)
             throw new KeyNotFoundException("Lesson not found");
+        
+        Guid? tutorId = null;
 
-        if (currentUserRole != "Admin" && !await _lessonRepository.IsUserParticipantAsync(lessonId, currentUserId))
+        if (currentUserRole == "Tutor")
+        {
+            var tutorProfile = await _tutorProfileRepository.GetByUserIdAsync(currentUserId);
+            
+            if (tutorProfile != null)
+                tutorId = tutorProfile.Id;
+        }
+
+
+        if (currentUserRole != "Admin" && !await _lessonRepository.IsUserParticipantAsync(lessonId, tutorId ?? currentUserId))
             throw new UnauthorizedAccessException("You are not a participant of this lesson");
 
         var comments = await _commentRepository.GetByLessonIdAsync(lessonId);

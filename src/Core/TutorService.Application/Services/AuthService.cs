@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using TutorService.Application.Configuration;
 using TutorService.Application.DTOs.User;
@@ -15,6 +16,7 @@ public class AuthService : IAuthService
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IJwtService _jwtService;
     private readonly IPasswordService _passwordService;
+    private readonly IMapper _mapper;
     private readonly ILogger<AuthService> _logger;
 
     public AuthService(
@@ -22,6 +24,7 @@ public class AuthService : IAuthService
         IRefreshTokenRepository refreshTokenRepository,
         IJwtService jwtService,
         IPasswordService passwordService,
+        IMapper mapper,
         ILogger<AuthService> logger)
     {
         _userRepository = userRepository;
@@ -29,6 +32,7 @@ public class AuthService : IAuthService
         _jwtService = jwtService;
         _passwordService = passwordService;
         _logger = logger;
+        _mapper = mapper;
     }
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
@@ -167,16 +171,7 @@ public class AuthService : IAuthService
             Token = token,
             RefreshToken = refreshToken,
             Expiration = DateTime.UtcNow.AddDays(7),
-            User = new UserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Phone = user.Phone,
-                Role = user.Role,
-                IsEmailVerified = user.IsEmailVerified
-            }
+            User = _mapper.Map<UserDto>(user)
         };
     }
 }

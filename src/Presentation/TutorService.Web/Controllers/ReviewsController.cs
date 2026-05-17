@@ -30,6 +30,7 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpGet("tutor/{tutorProfileId}")]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewsByTutor(Guid tutorProfileId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         if (page < 1) page = 1;
@@ -40,6 +41,13 @@ public class ReviewsController : ControllerBase
             reviews,
             total
         });
+    }
+    
+    [HttpGet("tutor/{tutorProfileId}/user/{userId}")]
+    public async Task<ActionResult<IEnumerable<ReviewDto>>> GetReviewByTutorAndUser(Guid tutorProfileId, Guid userId)
+    {
+        var review = await _reviewService.GetUserReviewAsync(tutorProfileId, userId);
+        return Ok(review);
     }
 
     [HttpPut("{reviewId}")]

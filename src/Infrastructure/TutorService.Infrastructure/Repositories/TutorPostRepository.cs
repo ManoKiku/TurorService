@@ -130,7 +130,10 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
 
     public async Task<IEnumerable<TutorPost>> GetMyPostsAsync(Guid tutorId, PostStatus? status)
     {
-        var query = _dbSet.Where(p => !p.IsDeleted && p.TutorId == tutorId);
+        var query = _dbSet
+            .Include(p => p.TutorPostTags)
+            .ThenInclude(tpt => tpt.Tag)
+            .Where(p => !p.IsDeleted && p.TutorId == tutorId);
         if (status.HasValue) query = query.Where(p => p.Status == status.Value);
 
         return await query.ToListAsync();

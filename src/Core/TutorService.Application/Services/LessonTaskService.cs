@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using TutorService.Application.DTOs.Assigment;
 using TutorService.Application.DTOs.LessonTask;
 using TutorService.Application.Interfaces;
 using TutorService.Domain.Entities;
@@ -14,6 +15,7 @@ public class LessonTaskService : ILessonTaskService
     private readonly ILessonRepository _lessonRepository;
     private readonly IFileRepository _fileRepository;
     private readonly IMapper _mapper;
+    private readonly ITutorProfileRepository _tutorProfileRepository;
     private readonly ILogger<LessonTaskService> _logger;
 
     public LessonTaskService(
@@ -21,6 +23,7 @@ public class LessonTaskService : ILessonTaskService
         ILessonRepository lessonRepository,
         IFileRepository fileRepository,
         IMapper mapper,
+        ITutorProfileRepository tutorProfileRepository,
         ILogger<LessonTaskService> logger)
     {
         _taskRepository = taskRepository;
@@ -28,6 +31,7 @@ public class LessonTaskService : ILessonTaskService
         _fileRepository = fileRepository;
         _mapper = mapper;
         _logger = logger;
+        _tutorProfileRepository = tutorProfileRepository;
     }
 
     public async Task<LessonTaskDto> AddTaskAsync(Guid studentId, LessonTaskCreateRequest request)
@@ -78,7 +82,17 @@ public class LessonTaskService : ILessonTaskService
         if (lesson == null)
             throw new KeyNotFoundException("Lesson not found");
 
-        if (currentUserRole != "Admin" && !await _lessonRepository.IsUserParticipantAsync(lessonId, currentUserId))
+        Guid? tutorId = null;
+
+        if (currentUserRole == "Tutor")
+        {
+            var tutorProfile = await _tutorProfileRepository.GetByUserIdAsync(currentUserId);
+            
+            if (tutorProfile != null)
+                tutorId = tutorProfile.Id;
+        }
+
+        if (currentUserRole != "Admin" && !await _lessonRepository.IsUserParticipantAsync(lessonId, tutorId ?? currentUserId))
             throw new UnauthorizedAccessException("You are not a participant of this lesson");
 
         var tasks = await _taskRepository.GetByLessonIdAsync(lessonId);
@@ -102,5 +116,33 @@ public class LessonTaskService : ILessonTaskService
         _taskRepository.Remove(task);
         await _taskRepository.SaveChangesAsync();
         return true;
+    }
+    
+    public async Task<FileDownloadResponse> DownloadFileAsync(Guid id, Guid currentUserId, string currentUserRole)
+    {
+        var task = await _taskRepository.GetByIdWithDetailsAsync(id);
+        if (task == null)
+            throw new KeyNotFoundException("Task not found");
+        
+        var tutorProfile = await _tutorProfileRepository.GetByUserIdAsync(currentUserId);
+        
+        if(tutorProfile is null && currentUserRole == "Tutor")
+            throw new KeyNotFoundException("Tutor not found");
+
+        if (currentUserRole != "Admin" && !await _lessonRepository.IsUserParticipantAsync(task.LessonId, tutorProfile?.Id ?? currentUserId))
+            throw new UnauthorizedAccessException("You don't have access to this task");
+        
+        if (string.IsNullOrEmpty(task.MongoFileId))
+            throw new InvalidOperationException("Task doesn't have a file");
+
+        var fileStream = await _fileRepository.DownloadFileAsync(task.MongoFileId);
+
+        return new FileDownloadResponse
+        {
+            FileStream = fileStream,
+            ContentType = task.ContentType,
+            FileName = task.FileName,
+            FileSize = task.FileSize ?? 0
+        };
     }
 }

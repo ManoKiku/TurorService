@@ -43,6 +43,14 @@ public class SavedContentService : ISavedContentService
             if (request.File == null || request.File.Length == 0)
                 throw new ArgumentException("File is required");
 
+            if (request.FolderId != null)
+            {
+                var folder = await _folderRepository.GetByIdAsync(request.FolderId.Value);
+
+                if (folder is null)
+                    request.FolderId = null;
+            }
+
             ValidateFile(request.File);
 
             string mongoFileId;
@@ -58,6 +66,7 @@ public class SavedContentService : ISavedContentService
                 MongoFileId = mongoFileId,
                 FileSize = request.File.Length,
                 ContentType = request.File.ContentType,
+                FolderId = request.FolderId,
             };
 
             await _savedContentRepository.AddAsync(savedContent);

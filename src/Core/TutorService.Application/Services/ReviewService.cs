@@ -44,7 +44,6 @@ public class ReviewService : IReviewService
         if (tutorProfile == null)
             throw new KeyNotFoundException("Tutor profile not found.");
         
-        // Репетитор не может оставить отзыв сам себе
         if (tutorProfile.UserId == userId)
             throw new InvalidOperationException("Tutor cannot review themselves.");
         
@@ -52,7 +51,6 @@ public class ReviewService : IReviewService
         if (user == null)
             throw new KeyNotFoundException("User not found.");
         
-        // Проверка: пользователь уже оставлял отзыв этому репетитору?
         var existing = await _reviewRepository.GetByUserAndTutorAsync(userId, request.TutorProfileId);
         if (existing != null)
             throw new InvalidOperationException("You have already reviewed this tutor.");
@@ -97,7 +95,17 @@ public class ReviewService : IReviewService
         
         return (dtos, total);
     }
-    
+
+    public async Task<ReviewDto?> GetUserReviewAsync(Guid tutorProfileId, Guid userId)
+    {
+        var tutor = await _tutorProfileRepository.GetByIdAsync(tutorProfileId);
+        if (tutor == null)
+            throw new KeyNotFoundException("Tutor profile not found.");
+        
+        var review = await _reviewRepository.GetByUserAndTutorAsync(userId, tutorProfileId);
+        return _mapper.Map<ReviewDto>(review);
+    }
+
     public async Task<ReviewDto> UpdateReviewAsync(Guid reviewId, Guid userId, string userRole, ReviewUpdateRequest request)
     {
         if (request.Rating < 1 || request.Rating > 5)

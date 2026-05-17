@@ -28,6 +28,7 @@ public class ReviewRepository : BaseRepository<Review>, IReviewRepository
     public async Task<Review?> GetByUserAndTutorAsync(Guid userId, Guid tutorProfileId)
     {
         return await _dbSet
+            .Include(r => r.User)
             .FirstOrDefaultAsync(r => r.UserId == userId && r.TutorProfileId == tutorProfileId && !r.IsDeleted);
     }
 

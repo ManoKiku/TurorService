@@ -10,5 +10,6 @@ public class UserDto
     public required string LastName { get; set; }
     public required string Phone { get; set; }
     public required UserRole Role { get; set; }
+    public string? AvatarUrl { get; set; }
     public required bool IsEmailVerified { get; set; }
 }

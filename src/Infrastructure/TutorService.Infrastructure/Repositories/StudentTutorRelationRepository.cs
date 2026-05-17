@@ -29,6 +29,8 @@ public class StudentTutorRelationRepository : CrudRepository<StudentTutorRelatio
     public async Task<IEnumerable<StudentTutorRelation>> GetByTutorAsync(Guid tutorId, string? search = null)
     {
         var query = _dbSet
+            .Include(r => r.Tutor)
+            .ThenInclude(t => t!.User)
             .Include(r => r.Student)
             .Where(r => r.TutorId == tutorId);
 
@@ -50,6 +52,7 @@ public class StudentTutorRelationRepository : CrudRepository<StudentTutorRelatio
         var query = _dbSet
             .Include(r => r.Tutor)
             .ThenInclude(t => t!.User)
+            .Include(r => r.Student)
             .Where(r => r.StudentId == studentId);
 
         if (!string.IsNullOrEmpty(search))

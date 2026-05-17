@@ -45,4 +45,16 @@ public class LessonsTasksController : ControllerBase
         await _taskService.DeleteTaskAsync(taskId, currentUserId, currentUserRole);
         return NoContent();
     }
+    
+    [HttpGet("/api/lesson-tasks/{taskId}/download")]
+    public async Task<IActionResult> DownloadAssignmentFile(Guid taskId)
+    {
+        Console.WriteLine(taskId);
+        var currentUserId = ControllerHelper.GetUserIdFromClaims(User);
+        var currentUserRole = ControllerHelper.GetUserRoleFromClaims(User);
+        
+        var fileResponse = await _taskService.DownloadFileAsync(taskId, currentUserId, currentUserRole);
+        
+        return File(fileResponse.FileStream, fileResponse.ContentType, fileResponse.FileName);
+    }
 }

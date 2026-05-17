@@ -14,6 +14,12 @@ public class StudentTutorRelationMappingProfile : Profile
             .ForMember(d => d.TutorName, opt => opt.MapFrom(s =>
                 s.Tutor != null && s.Tutor.User != null
                     ? $"{s.Tutor.User.FirstName} {s.Tutor.User.LastName}"
-                    : string.Empty));
+                    : string.Empty))
+            .ForMember(d => d.StudentAvatarUrl,
+                opt => opt.MapFrom(s =>
+                    s.Student!.AvatarMongoFileId != string.Empty ? $"/api/users/{s.Student.Id}/avatar" : null))
+            .ForMember(d => d.TutorAvatarUrl,
+                opt => opt.MapFrom(s =>
+                    s.Tutor!.User!.AvatarMongoFileId != string.Empty ? $"/api/users/{s.Tutor.User.Id}/avatar" : null));
     }
 }

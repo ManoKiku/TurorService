@@ -16,7 +16,8 @@ public class UserMappingProfile : Profile
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         CreateMap<User, UserDto>()
-            .ForMember(dest => dest.IsEmailVerified, opt => opt.MapFrom(src => src.IsEmailVerified));
+            .ForMember(dest => dest.IsEmailVerified, opt => opt.MapFrom(src => src.IsEmailVerified))
+            .ForMember(dest => dest.AvatarUrl, opt => opt.MapFrom(src => src.AvatarMongoFileId != string.Empty ? $"/api/users/{src.Id}/avatar" : null ));
 
         CreateMap<UserDto, User>();
     }
