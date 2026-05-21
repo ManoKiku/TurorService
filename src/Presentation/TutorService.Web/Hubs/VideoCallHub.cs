@@ -286,5 +286,27 @@ public class VideoCallHub : Hub
             }
         }
     }
+    
+    public async Task SetScreenSharingState(Guid chatId, bool isEnabled)
+    {
+        var userId = ControllerHelper.GetUserIdFromClaims(Context.User);
+        if (!_videoCallRooms.TryGetValue(chatId, out var room)) return;
 
+        if (room.Participants.TryGetValue(userId, out var participant))
+        {
+            participant.IsScreenSharing = isEnabled;
+            var otherParticipants = room.Participants.Values
+                .Where(p => p.UserId != userId && p.IsConnected)
+                .ToList();
+            foreach (var other in otherParticipants)
+            {
+                await Clients.Client(other.ConnectionId).SendAsync("ParticipantScreenSharingStateChanged", new
+                {
+                    UserId = userId,
+                    IsEnabled = isEnabled,
+                    ChatId = chatId
+                });
+            }
+        }
+    }
 }

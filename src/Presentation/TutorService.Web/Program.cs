@@ -155,11 +155,11 @@ app.MapControllers();
 app.MapHub<ChatHub>("/chatHub");
 app.MapHub<VideoCallHub>("/videoCallHub");
 
-using (var scope = app.Services.CreateScope())
-{
-    var initializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
-    await initializer.SeedAsync();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var initializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
+//    await initializer.SeedAsync();
+//}
 
 app.MapControllers();
 
