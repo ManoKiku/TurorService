@@ -96,12 +96,12 @@ public class TutorPostController : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] int? subjectId, [FromQuery] int? cityId, [FromQuery] string? tags, [FromQuery] PostStatus? status, [FromQuery] string? search = null)
+    public async Task<IActionResult> Search([FromQuery] int? subjectId, [FromQuery] int? cityId, [FromQuery] string? tags, [FromQuery] PostStatus? status,  [FromQuery] int? minPrice, [FromQuery] int? maxPrice, [FromQuery] string? search = null)
     {
         IEnumerable<int>? tagIds = null;
         if (!string.IsNullOrWhiteSpace(tags)) tagIds = tags.Split(',').Select(int.Parse);
 
-        var result = await _postService.SearchAsync(subjectId, cityId, tagIds, status, search);
+        var result = await _postService.SearchAsync(subjectId, cityId, tagIds, status, search, minPrice, maxPrice);
         return Ok(result);
     }
 

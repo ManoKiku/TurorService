@@ -20,7 +20,9 @@ public interface ITutorPostRepository : IRepository<TutorPost>
         IEnumerable<int>? tagIds,
         PostStatus? status,
         Guid? tutorId,
-        string? search);
+        string? search,
+        int? minPrice,
+        int? maxPrice);
 
     Task<IEnumerable<TutorPost>> GetMyPostsAsync(Guid tutorId, PostStatus? status);
 

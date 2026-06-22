@@ -86,7 +86,9 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
         IEnumerable<int>? tagIds,
         PostStatus? status,
         Guid? tutorId,
-        string? search)
+        string? search,
+        int? minPrice,
+        int? maxPrice)
     {
         var query = _dbSet
             .AsQueryable()
@@ -118,6 +120,12 @@ public class TutorPostRepository : BaseRepository<TutorPost>, ITutorPostReposito
             query = query.Where(p => p.Status == status.Value);
         else
             query = query.Where(p => p.Status == PostStatus.Approved);
+        
+        if (minPrice.HasValue)
+            query = query.Where(p => p.Tutor.HourlyRate >= minPrice.Value);
+        
+        if (maxPrice.HasValue)
+            query = query.Where(p => p.Tutor.HourlyRate <= maxPrice.Value);
 
         if (!string.IsNullOrWhiteSpace(search))
         {

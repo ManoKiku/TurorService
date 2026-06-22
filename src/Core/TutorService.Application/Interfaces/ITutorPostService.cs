@@ -19,7 +19,9 @@ public interface ITutorPostService
         int? cityId,
         IEnumerable<int>? tagIds,
         PostStatus? status,
-        string? search);
+        string? search,
+        int? minPrice,
+        int? maxPrice);
 
     Task<IEnumerable<TutorPostDto>> GetMyPostsAsync(Guid tutorProfileId, PostStatus? status);
     Task ModerateAsync(Guid id, PostStatus status, Guid adminId);

@@ -114,9 +114,9 @@ public class TutorPostService : ITutorPostService
         return tags.Select(t => _mapper.Map<TagDto>(t));
     }
 
-    public async Task<IEnumerable<TutorPostDto>> SearchAsync(int? subjectId, int? cityId, IEnumerable<int>? tagIds, PostStatus? status, string? search)
+    public async Task<IEnumerable<TutorPostDto>> SearchAsync(int? subjectId, int? cityId, IEnumerable<int>? tagIds, PostStatus? status, string? search, int? minPrice, int? maxPrice)
     {
-        var result = await _postRepository.SearchAsync(subjectId, cityId, tagIds, status, null, search);
+        var result = await _postRepository.SearchAsync(subjectId, cityId, tagIds, status, null, search, minPrice, maxPrice);
         return _mapper.Map<IEnumerable<TutorPostDto>>(result);
     }
 
